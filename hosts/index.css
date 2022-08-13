@@ -1,6 +1,6 @@
-.parent{
+.viewer{
     display: flex;
-    height: 350px;
+    height: 70vh;
     border: 1px solid #333;
 }
 .image{
@@ -13,7 +13,7 @@
 }
 .pallet{
     display:flex;
-    height: 150px;
+    height: 25vh;
     border: 1px solid #333;
 }
 
