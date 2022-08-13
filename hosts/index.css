@@ -1,0 +1,24 @@
+.parent{
+    display: flex;
+    height: 350px;
+    border: 1px solid #333;
+}
+.image{
+    width: 70%;
+    background-color: rgb(230, 219, 200);
+}
+.preview{
+    width: 30%;
+    background-color: rgb(197, 197, 224);
+}
+.pallet{
+    display:flex;
+    height: 150px;
+    border: 1px solid #333;
+}
+
+.colors{
+    width: 50px;
+    height: 50px;
+    background-color: rgb(216, 213, 213);
+}
