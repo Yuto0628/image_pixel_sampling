@@ -11,12 +11,15 @@
   <div class="viewer">
     <div class="image">
       画像
+      <div>
+        <canvas id="canvas" width="700" height="400"></canvas>
+      </div>
     </div>
     <div class="preview">
       プレビュー
-      <div><input type="button" value="画像の読み込み"></div>
+      <div><input type="file" value="画像の読み込み" id="img_input"></div>
       <div>
-       タグ<input type="text" name="tag">
+        タグ<input type="text" name="tag">
       </div>
       <div>
         メモ<input type="text" name="memo">
@@ -40,5 +43,5 @@
     パレット
   </div>
 </body>
-
+<script src="index.js"></script>
 </html>
