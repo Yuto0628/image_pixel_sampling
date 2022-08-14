@@ -1,9 +1,8 @@
 /* ファイル読み込み機能 */
 document.getElementById("img_input").addEventListener('change',function(){
     draw_canvas();
-    console.log("added EventListener");
-    click_canvas();
 });
+get_clicked_color();
 
 function draw_canvas(){
     console.log("start draw_canvas");
@@ -21,7 +20,7 @@ function draw_canvas(){
     fileReader.readAsDataURL(img_input.files[0]);
 }
 
-function click_canvas(){
+function get_clicked_color(){
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext('2d');
     let r, g, b;
@@ -32,9 +31,9 @@ function click_canvas(){
         let mouseY = e.clientY - Math.floor(rect.top);
 
         let imagedata = ctx.getImageData(mouseX, mouseY, 1, 1);
-        r = imagedata.data[0]
-        g = imagedata.data[1]
-        b = imagedata.data[2]
+        r = imagedata.data[0];
+        g = imagedata.data[1];
+        b = imagedata.data[2];
         hsv = rgb2hsv(r, g, b);
         
         document.getElementById("pic_color").style.backgroundColor = 'rgb('+[r,g,b].join(',') + ')'
@@ -53,4 +52,27 @@ function rgb2hsv(r, g, b){
     const h = 
         n === 0 ? 0 : n && v === r ? (g - b)/n : v === g ? 2 + (b - r)/n : 4 + (r - g)/n;
     return [60 * (h < 0 ? h + 6 : h), v && (n / v) * 100, v * 100];
+}
+
+/* 色保存機能 */
+document.getElementById("btn_add_to_pallet").addEventListener('click',function(){
+    save_to_pallet();
+})
+
+function save_to_pallet(){
+    console.log("clicked_save_to_pallet");
+    const preview_pallet = document.getElementById("pic_color");
+    const pallets = document.getElementById("pallets");
+    const h = document.getElementById("h").innerHTML;
+    const s = document.getElementById("s").innerHTML;
+    const v = document.getElementById("v").innerHTML;
+    let memo_str = document.getElementById("memo").value;
+    pallets.insertAdjacentHTML('beforeend', '<div class="pallet"><div class="pallet_color"></div><div class="pallet_name"></div></div>');
+    pallets.lastElementChild.style.backgroundColor = preview_pallet.style.backgroundColor;
+    const color_str = 'h:'+h+' s:'+s+' v:'+v;
+    pallets.lastElementChild.getElementsByClassName("pallet_color")[0].insertAdjacentHTML('beforeend',color_str);
+    if(memo_str==''){
+        memo_str = "名前なし";
+    }
+    pallets.lastElementChild.getElementsByClassName("pallet_name")[0].insertAdjacentHTML('beforeend',memo_str);
 }
