@@ -1,27 +1,37 @@
+body{
+    margin:0px
+}
+
 .viewer{
     display: flex;
     height: 70vh;
     border: 1px solid #333;
 }
+
+/* イメージ部分に関するcss */
 .image{
     width: 70%;
     background-color: rgb(230, 219, 200);
 }
+
+/* プレビュー部分に関するcss */
 .preview{
     width: 30%;
     background-color: rgb(197, 197, 224);
 }
+
+/* パレット部分に関するcss*/
 .pallet{
     display:flex;
-    height: 25vh;
+    height: 29vh;
     border: 1px solid #333;
 }
 
+/* その他のcss*/
 .colors{
     width: 50px;
     height: 50px;
     background-color: rgb(216, 213, 213);
-
 }
 
 .hsv{
