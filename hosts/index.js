@@ -37,9 +37,9 @@ function get_clicked_color(){
         hsv = rgb2hsv(r, g, b);
         
         document.getElementById("pic_color").style.backgroundColor = 'rgb('+[r,g,b].join(',') + ')'
-        document.getElementById("h").innerHTML = "h:" + parseInt(hsv[0]);
-        document.getElementById("s").innerHTML = "s:" + parseInt(hsv[1]);
-        document.getElementById("v").innerHTML = "v:" + parseInt(hsv[2]);
+        document.getElementById("h").innerHTML = parseInt(hsv[0]);
+        document.getElementById("s").innerHTML = parseInt(hsv[1]);
+        document.getElementById("v").innerHTML = parseInt(hsv[2]);
     }
 }
 
