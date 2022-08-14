@@ -21,10 +21,17 @@ body{
 }
 
 /* パレット部分に関するcss*/
-.pallet{
+.pallets{
     display:flex;
     height: 29vh;
     border: 1px solid #333;
+    overflow-x: auto;
+}
+
+.pallet{
+    display: inline-block;
+    height:10vh;
+    width: 10vh;
 }
 
 /* その他のcss*/
@@ -48,3 +55,4 @@ body{
     width : 70%;
     margin: 0 auto;
 }
+

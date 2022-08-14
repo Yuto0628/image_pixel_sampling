@@ -1,9 +1,8 @@
 /* ファイル読み込み機能 */
 document.getElementById("img_input").addEventListener('change',function(){
     draw_canvas();
-    console.log("added EventListener");
-    click_canvas();
 });
+get_clicked_color();
 
 function draw_canvas(){
     console.log("start draw_canvas");
@@ -21,7 +20,7 @@ function draw_canvas(){
     fileReader.readAsDataURL(img_input.files[0]);
 }
 
-function click_canvas(){
+function get_clicked_color(){
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext('2d');
     let r, g, b;
@@ -32,9 +31,9 @@ function click_canvas(){
         let mouseY = e.clientY - Math.floor(rect.top);
 
         let imagedata = ctx.getImageData(mouseX, mouseY, 1, 1);
-        r = imagedata.data[0]
-        g = imagedata.data[1]
-        b = imagedata.data[2]
+        r = imagedata.data[0];
+        g = imagedata.data[1];
+        b = imagedata.data[2];
         hsv = rgb2hsv(r, g, b);
         
         document.getElementById("pic_color").style.backgroundColor = 'rgb('+[r,g,b].join(',') + ')'
@@ -53,4 +52,17 @@ function rgb2hsv(r, g, b){
     const h = 
         n === 0 ? 0 : n && v === r ? (g - b)/n : v === g ? 2 + (b - r)/n : 4 + (r - g)/n;
     return [60 * (h < 0 ? h + 6 : h), v && (n / v) * 100, v * 100];
+}
+
+/* 色保存機能 */
+document.getElementById("btn_add_to_pallet").addEventListener('click',function(){
+    save_to_pallet();
+})
+
+function save_to_pallet(){
+    console.log("clicked_save_to_pallet");
+    const preview_pallet = document.getElementById("pic_color");
+    const pallets = document.getElementById("pallets");
+    const pallet = pallets.insertAdjacentHTML('beforeend', '<div class="pallet" ></div>');
+    pallet.backgroundColor = 'rgb('+[r,g,b].join(',') + ')'
 }
