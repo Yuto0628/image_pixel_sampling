@@ -63,6 +63,16 @@ function save_to_pallet(){
     console.log("clicked_save_to_pallet");
     const preview_pallet = document.getElementById("pic_color");
     const pallets = document.getElementById("pallets");
-    const pallet = pallets.insertAdjacentHTML('beforeend', '<div class="pallet" ></div>');
-    pallet.backgroundColor = 'rgb('+[r,g,b].join(',') + ')'
+    const h = document.getElementById("h").innerHTML;
+    const s = document.getElementById("s").innerHTML;
+    const v = document.getElementById("v").innerHTML;
+    let memo_str = document.getElementById("memo").value;
+    pallets.insertAdjacentHTML('beforeend', '<div class="pallet"><div class="pallet_color"></div><div class="pallet_name"></div></div>');
+    pallets.lastElementChild.style.backgroundColor = preview_pallet.style.backgroundColor;
+    const color_str = 'h:'+h+' s:'+s+' v:'+v;
+    pallets.lastElementChild.getElementsByClassName("pallet_color")[0].insertAdjacentHTML('beforeend',color_str);
+    if(memo_str==''){
+        memo_str = "名前なし";
+    }
+    pallets.lastElementChild.getElementsByClassName("pallet_name")[0].insertAdjacentHTML('beforeend',memo_str);
 }
