@@ -1,4 +1,4 @@
-//ファイル読み込み
+/* ファイル読み込み機能 */
 document.getElementById("img_input").addEventListener('change',function(){
     draw_canvas();
     console.log("added EventListener");
