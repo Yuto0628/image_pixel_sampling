@@ -39,6 +39,7 @@ body{
     pointer-events: none;
 }
 .elem{
+    display: flex;
     width: 33%;
     background-color:beige;
 }
