@@ -76,3 +76,36 @@ function save_to_pallet(){
     }
     pallets.lastElementChild.getElementsByClassName("pallet_name")[0].insertAdjacentHTML('beforeend',memo_str);
 }
+
+/* パレットのデータをjsonファイルとしてローカルストレージに出力 */
+document.getElementById("btn_export_pallets_for_json").addEventListener('click', function(){
+    generate_json();
+})
+
+const generate_json = () => {
+    let obj = [];
+    const pallets = document.getElementById('pallets');
+    const pallet_list = pallets.children;
+
+    for (let i=0; i<pallet_list.length; i++){
+        const pallet = pallet_list[i];
+        const rgb = pallet.style.backgroundColor;
+        //const h = pallet.getElementByClassName("h")[0].textContent;
+        //const s = pallet.getElementByClassName("s")[0].textContent;
+        //const v = pallet.getElementByClassName("v")[0].textContent;
+        const hsv = pallet.getElementsByClassName("pallet_color")[0].textContent;
+        const memo = pallet.getElementsByClassName('pallet_name')[0].textContent;
+
+        const pallet_data = {
+            hsv : hsv,
+            memo : memo,
+        }
+        obj.push(pallet_data);
+    }
+
+    let file_name =  document.getElementById("text_export_file_name").value;
+    if(file_name == ''){file_name="パレットデータ";}
+
+    const json_data = JSON.stringify(obj);
+    localStorage.setItem(file_name, json_data);
+}
