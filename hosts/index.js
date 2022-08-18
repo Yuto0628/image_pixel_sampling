@@ -2,7 +2,6 @@
 document.getElementById("img_input").addEventListener('change',function(){
     draw_canvas();
 });
-get_clicked_color();
 
 function draw_canvas(){
     console.log("start draw_canvas");
@@ -19,28 +18,48 @@ function draw_canvas(){
     });
     fileReader.readAsDataURL(img_input.files[0]);
 }
+/*カラーのプレビューとピックした色がそれぞれ見える機能*/
+document.getElementById("canvas").addEventListener('mousemove', function(event){
+    rgb_list = get_mouse_on_color(event);
+    show_mouse_on_color(rgb_list);
+})
 
-function get_clicked_color(){
+document.getElementById("canvas").addEventListener('mousedown', function(event){
+    rgb_list = get_mouse_on_color(event);
+    show_clicked_color(rgb_list);
+})
+
+function get_mouse_on_color(event){
+    // (parameter) event: MouseEvent
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext('2d');
-    let r, g, b;
-    let hsv;
-    canvas.onclick = function(e){
-        const rect = e.target.getBoundingClientRect();
-        let mouseX = e.clientX - Math.floor(rect.left);
-        let mouseY = e.clientY - Math.floor(rect.top);
 
-        let imagedata = ctx.getImageData(mouseX, mouseY, 1, 1);
-        r = imagedata.data[0];
-        g = imagedata.data[1];
-        b = imagedata.data[2];
-        hsv = rgb2hsv(r, g, b);
-        
-        document.getElementById("pic_color").style.backgroundColor = 'rgb('+[r,g,b].join(',') + ')'
-        document.getElementById("h").innerHTML = parseInt(hsv[0]);
-        document.getElementById("s").innerHTML = parseInt(hsv[1]);
-        document.getElementById("v").innerHTML = parseInt(hsv[2]);
-    }
+    const rect = event.target.getBoundingClientRect();
+    const mouseX = event.clientX - Math.floor(rect.left);
+    const mouseY = event.clientY - Math.floor(rect.top);
+    const imagedata = ctx.getImageData(mouseX, mouseY, 1, 1);
+
+    const rgb_list = [imagedata.data[0], imagedata.data[1], imagedata.data[2]];
+    return rgb_list;
+}
+
+function show_mouse_on_color(rgb_list){
+    const hsv = rgb2hsv(rgb_list[0], rgb_list[1], rgb_list[2]);
+    const str_rgb = 'rgb('+[rgb_list[0], rgb_list[1], rgb_list[2]].join(',') + ')';
+    const pic_color = document.getElementById("pic_color");
+
+    pic_color.style.setProperty('--mouse-overed-color', str_rgb);
+}
+
+function show_clicked_color(rgb_list){
+    const hsv = rgb2hsv(rgb_list[0], rgb_list[1], rgb_list[2]);
+    const str_rgb = 'rgb('+[rgb_list[0], rgb_list[1], rgb_list[2]].join(',') + ')';
+    const pic_color = document.getElementById("pic_color");
+
+    pic_color.style.setProperty('--clicked-color', str_rgb);
+    document.getElementById("h").innerHTML = parseInt(hsv[0]);
+    document.getElementById("s").innerHTML = parseInt(hsv[1]);
+    document.getElementById("v").innerHTML = parseInt(hsv[2]);
 }
 
 function rgb2hsv(r, g, b){
