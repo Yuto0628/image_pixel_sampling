@@ -87,7 +87,7 @@ function save_to_pallet(){
     const v = document.getElementById("v").innerHTML;
     let memo_str = document.getElementById("memo").value;
     pallets.insertAdjacentHTML('beforeend', '<div class="pallet"><div class="pallet_color"></div><div class="pallet_name"></div></div>');
-    pallets.lastElementChild.style.backgroundColor = preview_pallet.style.backgroundColor;
+    pallets.lastElementChild.style.backgroundColor = preview_pallet.style.getPropertyValue('--clicked-color');
     const color_str = 'h:'+h+' s:'+s+' v:'+v;
     pallets.lastElementChild.getElementsByClassName("pallet_color")[0].insertAdjacentHTML('beforeend',color_str);
     if(memo_str==''){
