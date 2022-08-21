@@ -4,7 +4,6 @@ document.getElementById("img_input").addEventListener('change',function(){
 });
 
 function draw_canvas(){
-    console.log("start draw_canvas");
     const img_input = document.getElementById("img_input");
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext('2d');
@@ -79,21 +78,42 @@ document.getElementById("btn_add_to_pallet").addEventListener('click',function()
 })
 
 function save_to_pallet(){
-    console.log("clicked_save_to_pallet");
     const preview_pallet = document.getElementById("pic_color");
     const pallets = document.getElementById("pallets");
     const h = document.getElementById("h").innerHTML;
     const s = document.getElementById("s").innerHTML;
     const v = document.getElementById("v").innerHTML;
-    let memo_str = document.getElementById("memo").value;
-    pallets.insertAdjacentHTML('beforeend', '<div class="pallet"><div class="pallet_color"></div><div class="pallet_name"></div></div>');
-    pallets.lastElementChild.style.backgroundColor = preview_pallet.style.getPropertyValue('--clicked-color');
     const color_str = 'h:'+h+' s:'+s+' v:'+v;
-    pallets.lastElementChild.getElementsByClassName("pallet_color")[0].insertAdjacentHTML('beforeend',color_str);
-    if(memo_str==''){
-        memo_str = "名前なし";
+    let tag_name = document.getElementById("tag").value;
+    if(tag_name==''){tag_name = "名前なし";}
+    let memo_str = document.getElementById("memo").value;
+    if(memo_str==''){memo_str = "名前なし";}
+    const pallet_block_template = document.getElementById("pallet_block_template");
+    const pallet_blocks = document.getElementsByClassName("pallet_block");
+    let is_tag_already_exist = false;
+    for(let i=1;i<pallet_blocks.length;i++){//初めのテンプレートを除外するため1からスタート
+        const target_pallet_block = pallet_blocks[i];
+        if(target_pallet_block.getElementsByClassName("pallet_tag")[0].textContent == tag_name){
+            is_tag_already_exist = true;
+            break;
+        }
     }
-    pallets.lastElementChild.getElementsByClassName("pallet_name")[0].insertAdjacentHTML('beforeend',memo_str);
+    if(!is_tag_already_exist){
+        new_pallet_block = pallet_block_template.cloneNode(true);
+        new_pallet_block.removeAttribute("id");
+        new_pallet_block.getElementsByClassName("pallet_tag")[0].textContent = tag_name;
+        pallets.append(new_pallet_block);
+    }
+    for(let i=1;i<pallet_blocks.length;i++){
+        const target_pallet_block = pallet_blocks[i];
+        if(target_pallet_block.getElementsByClassName("pallet_tag")[0].textContent == tag_name){
+            target_pallet_block.getElementsByClassName("pallet_list")[0].insertAdjacentHTML('beforeend', '<div class="pallet"><div class="pallet_color"></div><div class="pallet_name"></div></div>');
+            target_pallet_block.getElementsByClassName("pallet_list")[0].lastElementChild.style.backgroundColor = preview_pallet.style.getPropertyValue('--clicked-color');
+            target_pallet_block.getElementsByClassName("pallet_list")[0].lastElementChild.getElementsByClassName("pallet_color")[0].insertAdjacentHTML('beforeend',color_str);
+            target_pallet_block.getElementsByClassName("pallet_list")[0].lastElementChild.getElementsByClassName("pallet_name")[0].insertAdjacentHTML('beforeend',memo_str);
+            break;
+        }
+    }
 }
 
 /* パレットのデータをjsonファイルとしてローカルストレージに出力 */
