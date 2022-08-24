@@ -11,6 +11,13 @@ body{
 .image{
     width: 70%;
     background-color: rgb(230, 219, 200);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.canvas{
+    vertical-align: middle;
 }
 
 /* プレビュー部分に関するcss */
