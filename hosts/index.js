@@ -106,11 +106,12 @@ function save_to_pallet(){
     }
     for(let i=1;i<pallet_blocks.length;i++){
         const target_pallet_block = pallet_blocks[i];
+        const pallet_list = target_pallet_block.getElementsByClassName("pallet_list")[0];
         if(target_pallet_block.getElementsByClassName("pallet_tag")[0].textContent == tag_name){
-            target_pallet_block.getElementsByClassName("pallet_list")[0].insertAdjacentHTML('beforeend', '<div class="pallet"><div class="pallet_color"></div><div class="pallet_name"></div></div>');
-            target_pallet_block.getElementsByClassName("pallet_list")[0].lastElementChild.style.backgroundColor = preview_pallet.style.getPropertyValue('--clicked-color');
-            target_pallet_block.getElementsByClassName("pallet_list")[0].lastElementChild.getElementsByClassName("pallet_color")[0].insertAdjacentHTML('beforeend',color_str);
-            target_pallet_block.getElementsByClassName("pallet_list")[0].lastElementChild.getElementsByClassName("pallet_name")[0].insertAdjacentHTML('beforeend',memo_str);
+            pallet_list.insertAdjacentHTML('beforeend', '<div class="pallet"><div class="pallet_color"></div><div class="pallet_name"></div></div>');
+            pallet_list.lastElementChild.style.backgroundColor = preview_pallet.style.getPropertyValue('--clicked-color');
+            pallet_list.lastElementChild.getElementsByClassName("pallet_color")[0].insertAdjacentHTML('beforeend',color_str);
+            pallet_list.lastElementChild.getElementsByClassName("pallet_name")[0].insertAdjacentHTML('beforeend',memo_str);
             break;
         }
     }

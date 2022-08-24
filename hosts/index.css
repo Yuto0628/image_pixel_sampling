@@ -5,7 +5,6 @@ body{
 .viewer{
     display: flex;
     height: 70vh;
-    border: 1px solid #333;
 }
 
 /* イメージ部分に関するcss */
@@ -23,15 +22,20 @@ body{
 /* パレット部分に関するcss*/
 .pallets{
     height: 29vh;
-    border: 1px solid #333333;
-    overflow-x: scroll;
+    overflow-y: auto;
 }
 
 .pallet{
     display: inline-block;
     position: relative;
     height: 10vh;
-    width: 10vh
+    width: 10vh;
+    white-space: normal;
+}
+
+.pallet_list{
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 .pallet_name{
@@ -46,15 +50,16 @@ body{
     display: flex;
     pointer-events: none;
 }
-.elem{
+
+.hsv_elem{
     display: flex;
     width: 33%;
     background-color:beige;
 }
 
 .pic_color{
-    height: 30%;
-    width : 70%;
+    height: 21vw;
+    width : 21vw;
     margin: 0 auto;
     --mouse-overed-color: white;
     --clicked-color: gray;
