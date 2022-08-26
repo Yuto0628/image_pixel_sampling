@@ -1,34 +1,3 @@
-/* ファイル読み込み機能 */
-document.getElementById("img_input").addEventListener('change',function(){
-    draw_canvas();
-});
-
-function draw_canvas(){
-    const image = document.getElementById("image");
-    const img_input = document.getElementById("img_input");
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext('2d');
-    let width;
-    let height;
-    let fileReader = new FileReader();
-    fileReader.onload = (function(event) {
-        const img = new Image();
-        img.onload = (function(){
-            width  = img.width;
-            height = img.height;
-            width_div = image.clientWidth;
-            height_div = image.clientHeight;
-            rate = Math.min(height_div/height,width_div/width);
-            canvas.width  = parseInt(width*rate);
-            canvas.height = parseInt(height*rate);
-
-            ctx.drawImage(img,0,0,width*rate,height*rate);
-        })
-    img.src = event.target.result;
-    });
-    fileReader.readAsDataURL(img_input.files[0]);
-}
-
 
 /*カラーのプレビューとピックした色がそれぞれ見える機能*/
 document.getElementById("canvas").addEventListener('mousemove', function(event){
