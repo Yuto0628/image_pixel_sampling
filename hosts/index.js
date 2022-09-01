@@ -19,13 +19,13 @@ function draw_canvas(){
 }
 /*カラーのプレビューとピックした色がそれぞれ見える機能*/
 document.getElementById("canvas").addEventListener('mousemove', function(event){
-    rgb_list = get_mouse_on_color(event);
-    show_mouse_on_color(rgb_list);
+    const rgb = get_mouse_on_color(event);
+    set_mouse_on_color(rgb);
 })
 
 document.getElementById("canvas").addEventListener('mousedown', function(event){
-    rgb_list = get_mouse_on_color(event);
-    show_clicked_color(rgb_list);
+    const rgb = get_mouse_on_color(event);
+    set_clicked_color(rgb);
 })
 
 function get_mouse_on_color(event){
@@ -38,11 +38,11 @@ function get_mouse_on_color(event){
     const mouseY = event.clientY - Math.floor(rect.top);
     const imagedata = ctx.getImageData(mouseX, mouseY, 1, 1);
 
-    const rgb_list = [imagedata.data[0], imagedata.data[1], imagedata.data[2]];
-    return rgb_list;
+    const rgb = [imagedata.data[0], imagedata.data[1], imagedata.data[2]];
+    return rgb;
 }
 
-function show_mouse_on_color(rgb_list){
+function set_mouse_on_color(rgb_list){
     const hsv = rgb2hsv(rgb_list[0], rgb_list[1], rgb_list[2]);
     const str_rgb = 'rgb('+[rgb_list[0], rgb_list[1], rgb_list[2]].join(',') + ')';
     const pic_color = document.getElementById("pic_color");
@@ -50,7 +50,7 @@ function show_mouse_on_color(rgb_list){
     pic_color.style.setProperty('--mouse-overed-color', str_rgb);
 }
 
-function show_clicked_color(rgb_list){
+function set_clicked_color(rgb_list){
     const hsv = rgb2hsv(rgb_list[0], rgb_list[1], rgb_list[2]);
     const str_rgb = 'rgb('+[rgb_list[0], rgb_list[1], rgb_list[2]].join(',') + ')';
     const pic_color = document.getElementById("pic_color");
@@ -117,35 +117,97 @@ function save_to_pallet(){
     }
 }
 
-/* パレットのデータをjsonファイルとしてローカルストレージに出力 */
+/* パレットのデータをjson形式でローカルストレージに保存 */
 document.getElementById("btn_export_pallets_for_json").addEventListener('click', function(){
-    generate_json();
+    save_json();
+    load_keys();
 })
 
-const generate_json = () => {
-    let obj = [];
-    const pallets = document.getElementById('pallets');
-    const pallet_list = pallets.children;
+function get_pallet_block_data(){
+    let blocks = [];
 
-    for (let i=0; i<pallet_list.length; i++){
-        const pallet = pallet_list[i];
-        const rgb = pallet.style.backgroundColor;
-        //const h = pallet.getElementByClassName("h")[0].textContent;
-        //const s = pallet.getElementByClassName("s")[0].textContent;
-        //const v = pallet.getElementByClassName("v")[0].textContent;
-        const hsv = pallet.getElementsByClassName("pallet_color")[0].textContent;
-        const memo = pallet.getElementsByClassName('pallet_name')[0].textContent;
+    pallet_blocks = document.getElementsByClassName('pallet_block');
+    for(let i=0; i<pallet_blocks.length; i++){
+        let block_data = {};
+        let pallets_data = [];
 
-        const pallet_data = {
-            hsv : hsv,
-            memo : memo,
+        const pallet_list = pallet_blocks[i].getElementsByClassName('pallet_list')[0];
+        const pallets = pallet_list.getElementsByClassName('pallet');
+        for(let j=0; j<pallets.length; j++){
+            let pallet_data = {};
+
+            const pallet = pallets[j];
+            //const h = pallet.getElementByClassName("h")[0].textContent;
+            //const s = pallet.getElementByClassName("s")[0].textContent;
+            //const v = pallet.getElementByClassName("v")[0].textContent;
+            pallet_data['hsv'] = pallet.getElementsByClassName("pallet_color")[0].textContent;
+            pallet_data['rgb'] = pallet.style.backgroundColor;
+            pallet_data['memo'] = pallet.getElementsByClassName('pallet_name')[0].textContent;
+
+            pallets_data.push(pallet_data);
         }
-        obj.push(pallet_data);
+        block_data['pallets'] = pallets_data;
+        block_data['tag'] = pallet_blocks[i].getElementsByClassName('pallet_tag')[0].textContent;
+
+        blocks.push(block_data);
+    }
+    return blocks;
+}
+
+function save_json(){
+    let save_file = {};
+
+    const img_data = document.getElementById('canvas').toDataURL();
+    let file_name = document.getElementById('export_file_name').value;
+    if(file_name == ''){file_name = 'パレットデータ'};
+
+    save_file['name'] = file_name;
+    save_file['img'] = JSON.stringify(img_data);
+    save_file['blocks'] = get_pallet_block_data();
+
+    if(localStorage.getItem('save_list') == null){
+        console.log('save_list is null');
+        let save_name = 'save_list';
+        let save_list = [];
+        save_list.push(save_file);
+
+        localStorage.setItem(save_name, JSON.stringify(save_list));
+        return
     }
 
-    let file_name =  document.getElementById("text_export_file_name").value;
-    if(file_name == ''){file_name="パレットデータ";}
+    let save_list = JSON.parse(localStorage.getItem('save_list'));
+    console.log('save_list: ', save_list);
+    for(let i=0; i<save_list.length; i++){
+        if(save_file['name'] == save_list[i]['name']){
+            save_list[i] = save_file;
+            localStorage.setItem('save_list', JSON.stringify(save_list));
+            return
+        }
+    }
+    save_list.push(save_file);
+    localStorage.setItem('save_list', JSON.stringify(save_list));
+}
 
-    const json_data = JSON.stringify(obj);
-    localStorage.setItem(file_name, json_data);
+/* 保存したローカルストレージのjsonファイル名をプルダウンに追加 */
+window.addEventListener('DOMContentLoaded', function(){
+    load_keys();
+})
+
+function load_keys(){
+    const select = document.getElementById("local_storage_list");
+    remove_options(select);//selectの初期化
+
+    const save_list = JSON.parse(localStorage.getItem('save_list'));
+    for(let i=0; i<save_list.length; i++){
+        const option = document.createElement("option");
+        option.text = save_list[i]['name'];
+        select.appendChild(option);
+    }
+}
+
+function remove_options(elem_select){
+    const len_opt = elem_select.options.length - 1;
+    for(let i=len_opt; i >= 0; i--){
+        elem_select.remove(i+1);
+    }
 }
