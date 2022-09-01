@@ -123,37 +123,6 @@ document.getElementById("btn_export_pallets_for_json").addEventListener('click',
     load_keys();
 })
 
-function get_pallet_block_data(){
-    let blocks = [];
-
-    pallet_blocks = document.getElementsByClassName('pallet_block');
-    for(let i=0; i<pallet_blocks.length; i++){
-        let block_data = {};
-        let pallets_data = [];
-
-        const pallet_list = pallet_blocks[i].getElementsByClassName('pallet_list')[0];
-        const pallets = pallet_list.getElementsByClassName('pallet');
-        for(let j=0; j<pallets.length; j++){
-            let pallet_data = {};
-
-            const pallet = pallets[j];
-            //const h = pallet.getElementByClassName("h")[0].textContent;
-            //const s = pallet.getElementByClassName("s")[0].textContent;
-            //const v = pallet.getElementByClassName("v")[0].textContent;
-            pallet_data['hsv'] = pallet.getElementsByClassName("pallet_color")[0].textContent;
-            pallet_data['rgb'] = pallet.style.backgroundColor;
-            pallet_data['memo'] = pallet.getElementsByClassName('pallet_name')[0].textContent;
-
-            pallets_data.push(pallet_data);
-        }
-        block_data['pallets'] = pallets_data;
-        block_data['tag'] = pallet_blocks[i].getElementsByClassName('pallet_tag')[0].textContent;
-
-        blocks.push(block_data);
-    }
-    return blocks;
-}
-
 function save_json(){
     let save_file = {};
 
@@ -163,7 +132,7 @@ function save_json(){
 
     save_file['name'] = file_name;
     save_file['img'] = JSON.stringify(img_data);
-    save_file['blocks'] = get_pallet_block_data();
+    save_file['blocks'] = document.getElementById('pallets').innerHTML;
 
     if(localStorage.getItem('save_list') == null){
         console.log('save_list is null');
