@@ -9,42 +9,41 @@
 
 <body>
   <div class="viewer">
-    <div id="image" class="image">
+    <div class="image" id="image">
         <canvas id="canvas" width="700" height="400"></canvas>
     </div>
     <div class="preview">
-      <div><input type="file" value="画像の読み込み" id="img_input"></div>
+      <div><input type="file" id="img_input" value="画像の読み込み"></div>
       <div>
         タグ<input type="text" id="tag">
       </div>
       <div>
         メモ<input type="text" id="memo">
       </div>
-      <div class="hsv">
+      <div class="flex_div">
         <label class="hsv_elem" for="h">h:<div type="text" id="h"></div></label>
         <label class="hsv_elem" for="s">s:<div type="text" id="s"></div></label>
         <label class="hsv_elem" for="v">v:<div type="text" id="v"></div></label>
       </div>
       <div class="pic_color" id="pic_color">
         <div class="sampling">
-          サンプリング
         </div>
       </div>
       <div>
-        <div><input type="button" value="カラーを一覧に追加" id="btn_add_to_pallet"></div>
+        <div><input type="button" class="large_btn" id="btn_add_to_pallet" value="カラーを一覧に追加"><input class="small_btn" type="button" value="カラーを削除"></div>
       </div>
       <div>
         <div>
           <div><input type="text" id="text_export_file_name"></input></div>
         </div>
         <div>
-          <div><input type="button" value="パレットのデータを保存" id="btn_export_pallets_for_json"></div>
+          <div><input type="button" class="extra_large_btn" id="btn_export_pallets_for_json" value="パレットのデータを保存"></div>
         </div>
       </div>
     </div>
   </div>
   <div class="pallets" id="pallets">
-    <div id="pallet_block_template" class="pallet_block">
+    <div class="pallet_block" id="pallet_block_template">
       <div class="pallet_tag"></div>
       <div class="pallet_list"></div>
     </div>

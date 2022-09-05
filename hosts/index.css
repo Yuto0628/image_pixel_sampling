@@ -51,16 +51,36 @@ body{
     bottom: 0;
 }
 
-/* その他のcss*/
+/*ボタンのサイズに関するcss*/
+.extra_large_btn{
+    position: flex;
+    width: 55%;
+}
 
-.hsv{
+.large_btn{
+    position: flex;
+    width: 45%;
+}
+
+.medium_btn{
+    position: flex;
+    width: 40%;
+}
+
+.small_btn{
+    position: flex;
+    width: 30%;
+}
+
+/* その他のcss*/
+.flex_div{
     display: flex;
-    pointer-events: none;
 }
 
 .hsv_elem{
     display: flex;
     width: 33%;
+    pointer-events: none;
     background-color:beige;
 }
 
