@@ -131,7 +131,7 @@ function save_to_pallet(){
 }
 
 /* パレットのデータをjsonファイルとしてローカルストレージに出力 */
-document.getElementById("btn_export_pallets_for_json").addEventListener('click', function(){
+document.getElementById("btn_save_pallets").addEventListener('click', function(){
     generate_json();
 })
 

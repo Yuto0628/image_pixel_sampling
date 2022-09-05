@@ -51,23 +51,23 @@ body{
     bottom: 0;
 }
 
-/*ボタンのサイズに関するcss*/
-.extra_large_btn{
+/*エレメントのサイズに関するcss*/
+.extra_large_div{
     position: flex;
     width: 55%;
 }
 
-.large_btn{
+.large_div{
     position: flex;
     width: 45%;
 }
 
-.medium_btn{
+.medium_div{
     position: flex;
     width: 40%;
 }
 
-.small_btn{
+.small_div{
     position: flex;
     width: 30%;
 }

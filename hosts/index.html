@@ -15,10 +15,10 @@
     <div class="preview">
       <div><input type="file" id="img_input" value="画像の読み込み"></div>
       <div>
-        タグ<input type="text" id="tag">
+        タグ<input type="text" class="middle_div" id="tag">
       </div>
       <div>
-        メモ<input type="text" id="memo">
+        メモ<input type="text" class="middle_div" id="memo">
       </div>
       <div class="flex_div">
         <label class="hsv_elem" for="h">h:<div type="text" id="h"></div></label>
@@ -30,14 +30,12 @@
         </div>
       </div>
       <div>
-        <div><input type="button" class="large_btn" id="btn_add_to_pallet" value="カラーを一覧に追加"><input class="small_btn" type="button" value="カラーを削除"></div>
+        <div><input type="button" class="large_div" id="btn_add_to_pallet" value="カラーを一覧に追加"></input><input class="small_btn" type="button" value="カラーを削除"></input></div>
       </div>
       <div>
-        <div>
-          <div><input type="text" id="text_export_file_name"></input></div>
-        </div>
-        <div>
-          <div><input type="button" class="extra_large_btn" id="btn_export_pallets_for_json" value="パレットのデータを保存"></div>
+        <div class="flex_div">
+          <input type="text" class="extra_large_div" id="text_export_file_name"></input>
+          <input type="button" class="midium_div" id="btn_save_pallets" value="データをセーブ"></input>
         </div>
       </div>
     </div>
