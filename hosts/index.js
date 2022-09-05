@@ -1,5 +1,8 @@
 /* ファイル読み込み機能 */
 document.getElementById("img_input").addEventListener('change',function(){
+    clear_pallets();
+    clear_canvas();
+    set_first_option();
     draw_canvas();
 });
 
@@ -204,10 +207,20 @@ function load_save_data(){
     const save_list = JSON.parse(localStorage.getItem('save_list'));
 
     let save_data;
-    for(let i=0; i<save_list.length; i++){
-        if(save_list[i]['name'] == save_name){
-            save_data = save_list[i];
+    try {
+        for(let i=0; i<save_list.length; i++){
+            if(save_list[i]['name'] == save_name){
+                save_data = save_list[i];
+            }
         }
+        if(save_data==null){
+            throw new Error("Cant get save_data");
+        }
+    } catch{
+        //初期化
+        clear_pallets();
+        clear_canvas();
+        return
     }
 
     const img_data = save_data['img'];
@@ -236,4 +249,22 @@ function load_save_data(){
         ctx.drawImage(img,0,0,width*rate,height*rate);
     }
     img.src = img_data;
+}
+
+function clear_canvas(){
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function clear_pallets(){
+    const pallet_block_template = document.getElementById('pallet_block_template');
+    const pallets = document.getElementById('pallets');
+    pallets.innerHTML = pallet_block_template.outerHTML;
+}
+
+function set_first_option(){
+    const select = document.getElementById('local_storage_list');
+    const options = select.options;
+    options[0].selected = true;
 }
