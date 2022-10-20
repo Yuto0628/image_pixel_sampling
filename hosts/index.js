@@ -1,5 +1,8 @@
 /* ファイル読み込み機能 */
 document.getElementById("img_input").addEventListener('change',function(){
+    clear_pallets();
+    clear_canvas();
+    set_first_option();
     draw_canvas();
 });
 
@@ -32,13 +35,13 @@ function draw_canvas(){
 
 /*カラーのプレビューとピックした色がそれぞれ見える機能*/
 document.getElementById("canvas").addEventListener('mousemove', function(event){
-    rgb_list = get_mouse_on_color(event);
-    show_mouse_on_color(rgb_list);
+    const rgb = get_mouse_on_color(event);
+    set_mouse_on_color(rgb);
 })
 
 document.getElementById("canvas").addEventListener('mousedown', function(event){
-    rgb_list = get_mouse_on_color(event);
-    show_clicked_color(rgb_list);
+    const rgb = get_mouse_on_color(event);
+    set_clicked_color(rgb);
 })
 
 function get_mouse_on_color(event){
@@ -51,11 +54,11 @@ function get_mouse_on_color(event){
     const mouseY = event.clientY - Math.floor(rect.top);
     const imagedata = ctx.getImageData(mouseX, mouseY, 1, 1);
 
-    const rgb_list = [imagedata.data[0], imagedata.data[1], imagedata.data[2]];
-    return rgb_list;
+    const rgb = [imagedata.data[0], imagedata.data[1], imagedata.data[2]];
+    return rgb;
 }
 
-function show_mouse_on_color(rgb_list){
+function set_mouse_on_color(rgb_list){
     const hsv = rgb2hsv(rgb_list[0], rgb_list[1], rgb_list[2]);
     const str_rgb = 'rgb('+[rgb_list[0], rgb_list[1], rgb_list[2]].join(',') + ')';
     const pic_color = document.getElementById("pic_color");
@@ -63,7 +66,7 @@ function show_mouse_on_color(rgb_list){
     pic_color.style.setProperty('--mouse-overed-color', str_rgb);
 }
 
-function show_clicked_color(rgb_list){
+function set_clicked_color(rgb_list){
     const hsv = rgb2hsv(rgb_list[0], rgb_list[1], rgb_list[2]);
     const str_rgb = 'rgb('+[rgb_list[0], rgb_list[1], rgb_list[2]].join(',') + ')';
     const pic_color = document.getElementById("pic_color");
@@ -130,35 +133,138 @@ function save_to_pallet(){
     }
 }
 
-/* パレットのデータをjsonファイルとしてローカルストレージに出力 */
+/* パレットのデータをjson形式でローカルストレージに保存 */
 document.getElementById("btn_export_pallets_for_json").addEventListener('click', function(){
-    generate_json();
+    save_json();
+    load_keys();
 })
 
-const generate_json = () => {
-    let obj = [];
-    const pallets = document.getElementById('pallets');
-    const pallet_list = pallets.children;
+function save_json(){
+    let save_file = {};
 
-    for (let i=0; i<pallet_list.length; i++){
-        const pallet = pallet_list[i];
-        const rgb = pallet.style.backgroundColor;
-        //const h = pallet.getElementByClassName("h")[0].textContent;
-        //const s = pallet.getElementByClassName("s")[0].textContent;
-        //const v = pallet.getElementByClassName("v")[0].textContent;
-        const hsv = pallet.getElementsByClassName("pallet_color")[0].textContent;
-        const memo = pallet.getElementsByClassName('pallet_name')[0].textContent;
+    const img_data = document.getElementById('canvas').toDataURL();
+    let file_name = document.getElementById('export_file_name').value;
+    if(file_name == ''){file_name = 'パレットデータ'};
 
-        const pallet_data = {
-            hsv : hsv,
-            memo : memo,
-        }
-        obj.push(pallet_data);
+    save_file['name'] = file_name;
+    save_file['img'] = img_data;
+    save_file['blocks'] = document.getElementById('pallets').innerHTML;
+
+    if(localStorage.getItem('save_list') == null){
+        console.log('save_list is null');
+        let save_name = 'save_list';
+        let save_list = [];
+        save_list.push(save_file);
+
+        localStorage.setItem(save_name, JSON.stringify(save_list));
+        return
     }
 
-    let file_name =  document.getElementById("text_export_file_name").value;
-    if(file_name == ''){file_name="パレットデータ";}
+    let save_list = JSON.parse(localStorage.getItem('save_list'));
+    console.log('save_list: ', save_list);
+    for(let i=0; i<save_list.length; i++){
+        if(save_file['name'] == save_list[i]['name']){
+            save_list[i] = save_file;
+            localStorage.setItem('save_list', JSON.stringify(save_list));
+            return
+        }
+    }
+    save_list.push(save_file);
+    localStorage.setItem('save_list', JSON.stringify(save_list));
+}
 
-    const json_data = JSON.stringify(obj);
-    localStorage.setItem(file_name, json_data);
+/* 保存したローカルストレージのjsonファイル名をプルダウンに追加 */
+window.addEventListener('DOMContentLoaded', function(){
+    load_keys();
+})
+
+function load_keys(){
+    const select = document.getElementById("local_storage_list");
+    remove_options(select);//selectの初期化
+
+    const save_list = JSON.parse(localStorage.getItem('save_list'));
+    for(let i=0; i<save_list.length; i++){
+        const option = document.createElement("option");
+        option.text = save_list[i]['name'];
+        select.appendChild(option);
+    }
+}
+
+function remove_options(elem_select){
+    const len_opt = elem_select.options.length - 1;
+    for(let i=len_opt; i >= 0; i--){
+        elem_select.remove(i+1);
+    }
+}
+
+document.getElementById('local_storage_list').addEventListener('change', function(){
+    load_save_data();
+})
+
+function load_save_data(){
+    const select = document.getElementById('local_storage_list');
+    const save_name = select.value;
+    const save_list = JSON.parse(localStorage.getItem('save_list'));
+
+    let save_data;
+    try {
+        for(let i=0; i<save_list.length; i++){
+            if(save_list[i]['name'] == save_name){
+                save_data = save_list[i];
+            }
+        }
+        if(save_data==null){
+            throw new Error("Cant get save_data");
+        }
+    } catch{
+        //初期化
+        clear_pallets();
+        clear_canvas();
+        return
+    }
+
+    const img_data = save_data['img'];
+    const blocks_data = save_data['blocks'];
+
+    let pallets = document.getElementById('pallets');
+    pallets.innerHTML = blocks_data;
+
+
+    const image = document.getElementById("image");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext('2d');
+    let width;
+    let height;
+
+    const img = new Image();
+    img.onload = function(){
+        width  = img.width;
+        height = img.height;
+        width_div = image.clientWidth;
+        height_div = image.clientHeight;
+        rate = Math.min(height_div/height,width_div/width);
+        canvas.width  = parseInt(width*rate);
+        canvas.height = parseInt(height*rate);
+
+        ctx.drawImage(img,0,0,width*rate,height*rate);
+    }
+    img.src = img_data;
+}
+
+function clear_canvas(){
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function clear_pallets(){
+    const pallet_block_template = document.getElementById('pallet_block_template');
+    const pallets = document.getElementById('pallets');
+    pallets.innerHTML = pallet_block_template.outerHTML;
+}
+
+function set_first_option(){
+    const select = document.getElementById('local_storage_list');
+    const options = select.options;
+    options[0].selected = true;
 }
